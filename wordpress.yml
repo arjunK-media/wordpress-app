@@ -1,0 +1,86 @@
+# connect wordpress to outside world
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  ports:
+    - port: 80
+      # nodePort: 30000
+  selector:
+    app: wordpress
+    tier: frontend
+  type: LoadBalancer
+---
+
+
+# claim 2GiB 
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wp-pvc1
+  labels:
+    app: wordpress
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+
+#deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: frontend
+    # matchExpressions:
+    #   - {key : app, operator: In, values: [wordpress]}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      # name: wppod1
+      labels:
+        # env: testing
+        app: wordpress
+        tier: frontend
+        region: IN
+    spec:
+      containers:
+      - image: wordpress:5.5-apache
+        name: wordpress
+        # env:
+        #   - name: WORDPRESS_DB_HOST
+        #     value: word-sql-db
+
+        #   - name: WORDPRESS_DB_PASSWORD
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: mysqlsecret
+        #         key: root_pass
+        ports:
+          - containerPort: 80
+            name: wordpress
+            
+        volumeMounts:
+          - name: wp-vol1
+            mountPath: /var/www/html
+
+      volumes:
+        - name: wp-vol1
+          persistentVolumeClaim:
+            claimName: wp-pvc1

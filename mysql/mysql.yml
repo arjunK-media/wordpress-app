@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: demo-app-dep
-  namespace: demo
+  namespace: helm-argo-cd
 spec:
   selector:
     app: demoapp-dep
@@ -15,7 +15,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo-app-deploy
-  namespace: demo
+  namespace: helm-argo-cd
 spec:
   replicas: 5
   revisionHistoryLimit: 3

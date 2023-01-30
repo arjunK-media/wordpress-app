@@ -14,7 +14,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-app-deploy
+  name: demo-app-dep
   namespace: helm-argo-cd
 spec:
   replicas: 5

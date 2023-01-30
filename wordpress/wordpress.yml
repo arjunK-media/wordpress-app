@@ -3,6 +3,7 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: helm-argo-cd
   name: wordpress
   labels:
     app: wordpress
@@ -22,6 +23,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+
   name: wp-pvc1
   labels:
     app: wordpress
@@ -38,6 +40,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: helm-argo-cd
   name: wordpress
   labels:
     app: wordpress
